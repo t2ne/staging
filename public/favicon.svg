@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" version="1.1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+ <rect width="512" height="512" fill="#1a1a1a"/>
+ <g transform="matrix(1.3333 0 0 -1.3333 256 256)" fill="none" stroke="#ff0066" stroke-linecap="round" stroke-width="24">
+  <path d="m-120 0h240" stroke-width="24"/>
+  <path d="m-60-60v120" stroke-width="24"/>
+  <path d="m60-60v120" stroke-width="24"/>
+  <path d="m-150 30h300" stroke-width="16"/>
+  <path d="m-180 60h360" stroke-width="12"/>
+ </g>
+</svg>

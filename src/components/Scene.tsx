@@ -5,8 +5,8 @@ import * as THREE from 'three';
 import { motion } from 'framer-motion-3d';
 
 const INITIAL_CAMERA_POSITION = [8, 4, 8] as const;
-const ZOOM_MIN = 12;
-const ZOOM_MAX = 15;
+const ZOOM_MIN = 5;
+const ZOOM_MAX = 10;
 
 function Sign({ position, onClick, text }: { position: [number, number, number], onClick: () => void, text: string }) {
   return (
@@ -27,6 +27,30 @@ function Sign({ position, onClick, text }: { position: [number, number, number],
   );
 }
 
+function Lantern({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <Box args={[0.3, 0.5, 0.3]} position={[0, 0, 0]}>
+        <meshStandardMaterial color="#ff4444" />
+      </Box>
+      <pointLight position={[0, 0, 0]} color="#ff8866" intensity={0.8} distance={3} />
+    </group>
+  );
+}
+
+function Plant({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <Box args={[0.3, 0.4, 0.3]} position={[0, 0.2, 0]}>
+        <meshStandardMaterial color="#2d5a27" />
+      </Box>
+      <Box args={[0.2, 0.1, 0.2]} position={[0, 0, 0]}>
+        <meshStandardMaterial color="#8b4513" />
+      </Box>
+    </group>
+  );
+}
+
 export function Scene({ onSectionClick, currentSection, isTransitioning }: { 
   onSectionClick: (section: string) => void,
   currentSection: string | null,
@@ -36,12 +60,28 @@ export function Scene({ onSectionClick, currentSection, isTransitioning }: {
   const { camera } = useThree();
   const targetPosition = useRef(new THREE.Vector3(...INITIAL_CAMERA_POSITION));
   const initialRotation = useRef<THREE.Euler | null>(null);
+  const lastPosition = useRef<THREE.Vector3 | null>(null);
+  const lastRotation = useRef<THREE.Euler | null>(null);
 
   useEffect(() => {
     if (!initialRotation.current) {
       initialRotation.current = camera.rotation.clone();
     }
   }, [camera]);
+
+  useEffect(() => {
+    if (currentSection === null) {
+      // Store the position we want to return to
+      if (lastPosition.current && lastRotation.current) {
+        targetPosition.current.copy(lastPosition.current);
+        initialRotation.current = lastRotation.current;
+      }
+    } else {
+      // Store current position before moving to section
+      lastPosition.current = camera.position.clone();
+      lastRotation.current = camera.rotation.clone();
+    }
+  }, [currentSection, camera]);
 
   useFrame((state, delta) => {
     if (isTransitioning) {
@@ -60,7 +100,9 @@ export function Scene({ onSectionClick, currentSection, isTransitioning }: {
   const handleSignClick = (section: string) => {
     const signPositions = {
       'projects': [-2, 1.5, 1],
-      'about': [2, 1.5, 1]
+      'about': [2, 1.5, 1],
+      'skills': [-2, 1.5, -1],
+      'contact': [2, 1.5, -1]
     };
     
     if (section in signPositions) {
@@ -81,6 +123,7 @@ export function Scene({ onSectionClick, currentSection, isTransitioning }: {
         maxDistance={ZOOM_MAX}
         enabled={!isTransitioning}
       />
+      
       <Environment preset="night" />
       
       <group ref={groupRef} position={[0, -1, 0]}>
@@ -114,27 +157,31 @@ export function Scene({ onSectionClick, currentSection, isTransitioning }: {
         {/* Interactive signs */}
         <Sign position={[-2, 1.5, 1]} onClick={() => handleSignClick('projects')} text="Projects" />
         <Sign position={[2, 1.5, 1]} onClick={() => handleSignClick('about')} text="About" />
+        <Sign position={[-2, 1.5, -1]} onClick={() => handleSignClick('skills')} text="Skills" />
+        <Sign position={[2, 1.5, -1]} onClick={() => handleSignClick('contact')} text="Contact" />
         
         {/* Ground */}
         <Box args={[15, 0.1, 15]} position={[0, 0, 0]}>
           <meshStandardMaterial color="#1a1a1a" />
         </Box>
         
+        {/* Decorative elements */}
+        <Lantern position={[-3, 2, 3]} />
+        <Lantern position={[3, 2, 3]} />
+        <Lantern position={[-3, 2, -3]} />
+        <Lantern position={[3, 2, -3]} />
+        
+        {/* Plants */}
+        <Plant position={[-2, 0, 2]} />
+        <Plant position={[2, 0, 2]} />
+        <Plant position={[-2, 0, -2]} />
+        <Plant position={[2, 0, -2]} />
+        
         {/* Neon lights */}
         <pointLight position={[0, 2, 1.6]} color="#ff0066" intensity={2} />
         <pointLight position={[-2, 2, 1.6]} color="#00ff66" intensity={1} />
         <pointLight position={[2, 2, 1.6]} color="#0066ff" intensity={1} />
       </group>
-      
-      {/* Ambient lighting */}
-      <ambientLight intensity={0.2} />
-      
-      {/* Street lamps */}
-      <pointLight position={[-4, 3, 4]} color="#ffaa44" intensity={0.8} />
-      <pointLight position={[4, 3, -4]} color="#ffaa44" intensity={0.8} />
-      
-      {/* Moon light */}
-      <directionalLight position={[5, 5, -5]} intensity={0.3} color="#b4c7e6" />
     </>
   );
 }

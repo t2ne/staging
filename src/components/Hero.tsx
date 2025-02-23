@@ -13,9 +13,9 @@ export function Hero() {
   const [sound, setSound] = useState<Howl | null>(null);
 
   useEffect(() => {
-    // Initialize ambient sound
+    // Initialize ambient sound with the new URL
     const ambientSound = new Howl({
-      src: ['https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=japanese-garden-ambient-118957.mp3'],
+      src: ['https://cdn.pixabay.com/download/audio/2023/09/20/audio_f5e22a60c1.mp3?filename=silent-garden-193556.mp3'],
       loop: true,
       volume: 0.3,
     });
@@ -176,6 +176,53 @@ export function Hero() {
                           </p>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                )}
+                {currentSection === 'skills' && (
+                  <div className="space-y-8">
+                    <h2 className="text-4xl font-bold text-white mb-8">Skills & Expertise</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div>
+                        <h3 className="text-2xl font-semibold text-white mb-4">Frontend</h3>
+                        <ul className="space-y-2 text-gray-300">
+                          <li>• React & Next.js</li>
+                          <li>• Three.js & WebGL</li>
+                          <li>• TypeScript</li>
+                          <li>• Modern CSS & Tailwind</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-semibold text-white mb-4">Backend</h3>
+                        <ul className="space-y-2 text-gray-300">
+                          <li>• Node.js</li>
+                          <li>• WebAssembly</li>
+                          <li>• API Design</li>
+                          <li>• Database Architecture</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {currentSection === 'contact' && (
+                  <div className="space-y-8">
+                    <h2 className="text-4xl font-bold text-white mb-8">Get in Touch</h2>
+                    <p className="text-gray-300 mb-6">
+                      I'm always interested in hearing about new projects and opportunities. Feel free to reach out through any of these channels:
+                    </p>
+                    <div className="space-y-4">
+                      <a href="mailto:hi@t2ne.eu" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+                        <Mail size={24} />
+                        <span>hi@t2ne.eu</span>
+                      </a>
+                      <a href="https://github.com/t2ne" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+                        <Github size={24} />
+                        <span>github.com/t2ne</span>
+                      </a>
+                      <a href="https://linkedin.com/in/t2ne" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 text-gray-300 hover:text-white transition-colors">
+                        <Linkedin size={24} />
+                        <span>linkedin.com/in/t2ne</span>
+                      </a>
                     </div>
                   </div>
                 )}
