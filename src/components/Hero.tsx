@@ -5,6 +5,7 @@ import { Canvas } from '@react-three/fiber';
 import { Howl } from 'howler';
 import { Scene } from './Scene';
 import { LoadingScreen } from './LoadingScreen';
+import { getCloudinaryUrl } from '../utils/cloudinary';
 
 export function Hero() {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,9 +14,13 @@ export function Hero() {
   const [sound, setSound] = useState<Howl | null>(null);
 
   useEffect(() => {
-    // Initialize ambient sound with the new URL
+    const ambientSoundUrl = getCloudinaryUrl('ftp3wymgpbjc6xfy1myr', {
+      resourceType: 'video',
+      secure: true
+    });
+
     const ambientSound = new Howl({
-      src: ['https://cdn.pixabay.com/download/audio/2023/09/20/audio_f5e22a60c1.mp3?filename=silent-garden-193556.mp3'],
+      src: [ambientSoundUrl],
       loop: true,
       volume: 0.3,
     });
